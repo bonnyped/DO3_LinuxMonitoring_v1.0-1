@@ -17,6 +17,8 @@ PURPLE_BCKGRND='\033[45m'
 BLACK_BCKGRND='\033[40m'
 BCKGRND_COLOR_ARRAY=($NCOLOR $WHITE_BCKGRND $RED_BCKGRND $GREEN_BCKGRND $BLUE_BCKGRND $PURPLE_BCKGRND $BLACK_BCKGRND)
 
+ARRAY_COLORS_DEFAULT=(5 1 1 5)
+
 function detect_colors {
     case $1 in 
     [1*] ) COLOR_NAME=${BCKGRND_COLOR_ARRAY[$1]};;
@@ -57,10 +59,9 @@ function d_echo {
     echo
 }
 
-function check_arguments {
+function check_arguments_part4 {
     ERROR=0
-    [ $1 -lt 4 ] && echo -en ${RED_BCKGRND}"Arguments < 4, please start script with 4 arguments"${NCOLOR}  && d_echo && ERROR=1
-    [ $1 -gt 4 ] && echo -en ${RED_BCKGRND}"Arguments > 4, please start script with 4 arguments"${NCOLOR}  && d_echo && ERROR=1
+    [ $1 -gt 0 ] && echo -en ${RED_BCKGRND}"Arguments > 0, please start script with 0 arguments, colors confugure in configuration file"${NCOLOR}  && d_echo && ERROR=1
     return $ERROR
 }
 
@@ -69,7 +70,7 @@ function check_integer {
     COUNT=1
      for number in $1 $2 $3 $4
     do    
-    [[ $number =~ [^0-9]$ ]] && echo -en ${RED_BCKGRND}"Value of arg #$COUNT is not integer, please try again"${NCOLOR} && ERROR=1 && echo  
+    [[ $number =~ [[+-]?^0-9] ]] && echo -en ${RED_BCKGRND}"Value of arg #$COUNT is not integer, please try again"${NCOLOR} && ERROR=1 && echo  
     COUNT=$((COUNT+1))
     done
     echo
@@ -94,4 +95,18 @@ function check_number_of_color {
     done
     echo
     return $ERROR
+}
+
+function read_line_from_file {
+    COUNT=0
+    while IFS== read -r colomn_entity color_number; do
+        ARRAY_COLORS_FROM_FILE[$COUNT]=${ARRAY_COLORS_DEFAULT[$COUNT]}    
+        if [[ $color_number ]] 
+        then
+                ARRAY_COLORS_FROM_FILE[$COUNT]=${color_number}
+                let COUNT++
+        else
+                let COUNT++
+        fi
+    done < ./configuration.file
 }

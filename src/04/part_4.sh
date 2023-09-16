@@ -1,8 +1,8 @@
 #!/bin/bash
 
-#раскраска Баш-скрипта исследование системы 
+#раскраска Баш-скрипта исследование системы при помощи кофигурационного файла
 
-. ./functions_part3.file
+. ./functions_part4.file
 
 OS=`uname -s`
 MEM_TOTAL_b="$(free -b | grep "Mem:" | printf %d $(awk '{print $2}'))"
@@ -11,11 +11,13 @@ MEM_TOTAL_b_free="$(free -b | grep "Mem:" | printf %d  $(awk '{print $4}'))"
 b_Gb=1073741824;
 b_Mb=1048576;
 C=1024;
+alias alias_ar={ARRAY_COLORS_FROM_FILE[*]}
 
 echo
-if check_arguments $# && check_integer $1 $2 $3 $4 && check_sequence $1 $2 $3 $4 && check_number_of_color $1 $2 $3 $4
+read_line_from_file
+if check_arguments_part4 $# && check_integer ${ARRAY_COLORS_FROM_FILE[*]} && check_sequence ${ARRAY_COLORS_FROM_FILE[*]} && check_number_of_color ${ARRAY_COLORS_FROM_FILE[*]}
 then
-detect_colors $1 $2 $3 $4
+detect_colors ${ARRAY_COLORS_FROM_FILE[*]}
 echo -en "${COLOR_NAME}HOSTNAME:        ${COLOR_VALUE}$(hostname)${NCOLOR}"                                                                                         && d_echo
 echo -en "${COLOR_NAME}TIMEZONE:        ${COLOR_VALUE}$(cat /etc/timezone) $(date +"%Z %:::z")${NCOLOR} "                                                           && d_echo
 echo -en "${COLOR_NAME}HOSTNAME:        ${COLOR_VALUE}$(hostname)${NCOLOR}"                                                                                         && d_echo
