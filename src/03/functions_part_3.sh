@@ -1,0 +1,97 @@
+#!/bin/bash
+
+NCOLOR='\033[0m'
+WHITE='\033[37m'
+RED='\033[31m'
+GREEN='\033[32m'
+BLUE='\033[36m'
+PURPLE='\033[35m'
+BLACK='\033[30m'
+COLOR_ARRAY=($NCOLOR $WHITE $RED $GREEN $BLUE $PURPLE $BLACK)
+
+WHITE_BCKGRND='\033[47m'
+RED_BCKGRND='\033[41m'
+GREEN_BCKGRND='\033[42m'
+BLUE_BCKGRND='\033[46m'
+PURPLE_BCKGRND='\033[45m'
+BLACK_BCKGRND='\033[40m'
+BCKGRND_COLOR_ARRAY=($NCOLOR $WHITE_BCKGRND $RED_BCKGRND $GREEN_BCKGRND $BLUE_BCKGRND $PURPLE_BCKGRND $BLACK_BCKGRND)
+
+function detect_colors {
+    case $1 in 
+    [1*] ) COLOR_NAME=${BCKGRND_COLOR_ARRAY[$1]};;
+    [2*] ) COLOR_NAME=${BCKGRND_COLOR_ARRAY[$1]};;
+    [3*] ) COLOR_NAME=${BCKGRND_COLOR_ARRAY[$1]};;
+    [4*] ) COLOR_NAME=${BCKGRND_COLOR_ARRAY[$1]};;
+    [5*] ) COLOR_NAME=${BCKGRND_COLOR_ARRAY[$1]};;
+    [6*] ) COLOR_NAME=${BCKGRND_COLOR_ARRAY[$1]};;
+    esac
+    case $2 in 
+    [1*] ) COLOR_NAME+=${COLOR_ARRAY[$2]};;
+    [2*] ) COLOR_NAME+=${COLOR_ARRAY[$2]};;
+    [3*] ) COLOR_NAME+=${COLOR_ARRAY[$2]};;
+    [4*] ) COLOR_NAME+=${COLOR_ARRAY[$2]};;
+    [5*] ) COLOR_NAME+=${COLOR_ARRAY[$2]};;
+    [6*] ) COLOR_NAME+=${COLOR_ARRAY[$2]};;
+    esac
+    case $3 in 
+    [1*] ) COLOR_VALUE=${BCKGRND_COLOR_ARRAY[$3]};;
+    [2*] ) COLOR_VALUE=${BCKGRND_COLOR_ARRAY[$3]};;
+    [3*] ) COLOR_VALUE=${BCKGRND_COLOR_ARRAY[$3]};;
+    [4*] ) COLOR_VALUE=${BCKGRND_COLOR_ARRAY[$3]};;
+    [5*] ) COLOR_VALUE=${BCKGRND_COLOR_ARRAY[$3]};;
+    [6*] ) COLOR_VALUE=${BCKGRND_COLOR_ARRAY[$3]};;
+    esac
+    case $4 in 
+    [1*] ) COLOR_VALUE+=${COLOR_ARRAY[$4]};;
+    [2*] ) COLOR_VALUE+=${COLOR_ARRAY[$4]};;
+    [3*] ) COLOR_VALUE+=${COLOR_ARRAY[$4]};;
+    [4*] ) COLOR_VALUE+=${COLOR_ARRAY[$4]};;
+    [5*] ) COLOR_VALUE+=${COLOR_ARRAY[$4]};;
+    [6*] ) COLOR_VALUE+=${COLOR_ARRAY[$4]};;
+    esac
+}
+
+function d_echo {
+    echo
+    echo
+}
+
+function check_arguments {
+    ERROR=0
+    [ $1 -lt 4 ] && echo -en ${RED_BCKGRND}"Arguments < 4, please start script with 4 arguments"${NCOLOR}  && d_echo && ERROR=1
+    [ $1 -gt 4 ] && echo -en ${RED_BCKGRND}"Arguments > 4, please start script with 4 arguments"${NCOLOR}  && d_echo && ERROR=1
+    return $ERROR
+}
+
+function check_integer {
+    ERROR=0
+    COUNT=1
+     for number in $1 $2 $3 $4
+    do    
+    [[ $number =~ [^0-9]$ ]] && echo -en ${RED_BCKGRND}"Value of arg #$COUNT is not integer, please try again"${NCOLOR} && ERROR=1 && echo  
+    COUNT=$((COUNT+1))
+    done
+    echo
+    return $ERROR;
+}
+
+function check_sequence {
+    ERROR=0
+    [ $1 -eq $2 ] && echo -en ${RED_BCKGRND}"Color of text & color of background (first arg & second arg) must be difference, please try again"${NCOLOR}  && d_echo && ERROR=1
+    [ $3 -eq $4 ] && echo -en ${RED_BCKGRND}"Color of text & color of background (third arg & forth arg) must be difference, please try again"${NCOLOR}  && d_echo && ERROR=1
+    return ${ERROR}
+}
+
+function check_number_of_color {
+    ERROR=0
+    COUNT=1
+    for number in $1 $2 $3 $4
+    do
+    [ $number -lt 0 ] && echo -en ${RED_BCKGRND}"Value of arg #$COUNT less than 0, between 0 and 6, please try again"${NCOLOR} && ERROR=1 && echo  
+    [ $number -gt 6 ] && echo -en ${RED_BCKGRND}"Value of arg #$COUNT more than 6, between 0 and 6, please try again"${NCOLOR} && ERROR=1 && echo  
+    COUNT=$((COUNT+1))
+    done
+    echo
+    return $ERROR
+}
