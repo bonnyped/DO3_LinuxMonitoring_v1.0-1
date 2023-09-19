@@ -11,7 +11,6 @@ MEM_TOTAL_b_free="$(free -b | grep "Mem:" | printf %d  $(awk '{print $4}'))"
 b_Gb=1073741824;
 b_Mb=1048576;
 C=1024;
-alias alias_ar={ARRAY_COLORS_FROM_FILE[*]}
 
 read_line_from_file
 if check_arguments_part4 $# && check_integer ${ARRAY_COLORS_FROM_FILE[*]} && check_sequence ${ARRAY_COLORS_FROM_FILE[*]} && check_number_of_color ${ARRAY_COLORS_FROM_FILE[*]}
@@ -36,6 +35,5 @@ echo -en "${COLOR_NAME}SPACE_ROOT_USED: ${COLOR_VALUE}$(echo "$(df /root | awk '
 echo -en "${COLOR_NAME}SPACE_ROOT_FREE: ${COLOR_VALUE}$(echo "$(df /root | awk 'FNR==2 {printf $4}') $b_Mb $C" | awk '{printf "%.3f", $1 * $3 / $2}') MB ${NCOLOR}" && d_echo
 COLOR_NAME=${NCOLOR}
 COLOR_NAME_BCKGRND=${NCOLOR}
-fi
-
 print_color_case ${ARRAY_TO_PRINT[*]}
+fi

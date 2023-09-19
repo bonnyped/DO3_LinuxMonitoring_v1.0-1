@@ -17,7 +17,7 @@ PURPLE_BCKGRND='\033[45m'
 BLACK_BCKGRND='\033[40m'
 BCKGRND_COLOR_ARRAY=($NCOLOR $WHITE_BCKGRND $RED_BCKGRND $GREEN_BCKGRND $BLUE_BCKGRND $PURPLE_BCKGRND $BLACK_BCKGRND)
 
-ARRAY_COLORS_DEFAULT=(5 1 1 5)
+ARRAY_COLORS_DEFAULT=(2 1 1 5)
 NAMES_OF_COLORS_ARRAY=('default' '(white)' '(red)' '(green)' ' (blue)'  '(purple)' '(black)')
 TO_PRINT=
 
@@ -63,7 +63,7 @@ function d_echo {
 
 function check_arguments_part4 {
     ERROR=0
-    [ $1 -gt 0 ] && echo -en ${RED_BCKGRND}"Arguments > 0, please start script with 0 arguments, colors confugure in configuration file"${NCOLOR}  && d_echo && ERROR=1
+    [ $1 -gt 0 ] && echo && echo -en ${RED_BCKGRND}"Arguments > 0, please start script with 0 arguments, colors confugure in configuration file"${NCOLOR}  && d_echo && ERROR=1
     return $ERROR
 }
 

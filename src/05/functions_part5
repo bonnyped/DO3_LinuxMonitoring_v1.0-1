@@ -1,11 +1,11 @@
 #!/bin/bash
 
-TOP_FIVE_FOLDERS=
-MAX_LENGTH=0
+TOTAL_FOLDERS=$(find ${1} -mindepth 0 -type d | wc -l)
 
 function top_five_folders {
     COUNT=1
-    while [ ${COUNT} -le ${2} ]; do
+    [[ $TOTAL_FOLDERS -le 5 ]] && NUMBER_OF_DIR=${TOTAL_FOLDERS} || NUMBER_OF_DIR=5
+    while [ ${COUNT} -le ${NUMBER_OF_DIR} ]; do
         TOP_FIVE_FOLDERS+="\t"${COUNT}
         TOP_FIVE_FOLDERS+=" - "
         TOP_FIVE_FOLDERS+=$(du -h ${1} | sort -rn | head -${COUNT} | tail +${COUNT} | awk '{print $2}')

@@ -1,3 +1,27 @@
 #!/bin/bash
 
+. ../04/functions_part4
+
+# функция проверки наличия аргумента-пути для анализа
+function check_path_existence {
+    if [[ -z $1 ]]
+    then 
+    echo -en "${COLOR_NAME}There is no path to analize, please try again and fingerprint path with sign \"/\" at the end of path!\n${NCOLOR}"
+    ERROR=1
+    else
+    ERROR=0
+    fi
+    return ${ERROR}
+}
+
 # функция проверки окончания аргумента на слэш /
+function check_end_slash {
+    if [[ "$1" == */ ]]
+    then
+    ERROR=0
+    else 
+    ERROR=1
+    echo -en "${COLOR_NAME}Please don't forgot to fingerprint sign \"/\" at the end of path\n${NCOLOR}"
+    fi
+    return ${ERROR}
+}
