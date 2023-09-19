@@ -1,0 +1,17 @@
+#!/bin/bash
+
+TOP_FIVE_FOLDERS=
+MAX_LENGTH=0
+
+function top_five_folders {
+    COUNT=1
+    while [ ${COUNT} -le ${1} ]; do
+        TOP_FIVE_FOLDERS+="\t"${COUNT}
+        TOP_FIVE_FOLDERS+=" - "
+        TOP_FIVE_FOLDERS+=$(du -h ~/21-school.ru\(Ubuntu\)/DO3_LinuxMonitoring_v1.0-1/ | sort -rn | head -${COUNT} | tail +${COUNT} | awk '{print $2}')
+        TOP_FIVE_FOLDERS+=", "
+        TOP_FIVE_FOLDERS+=$(du -h ~/21-school.ru\(Ubuntu\)/DO3_LinuxMonitoring_v1.0-1/ | sort -rn | head -${COUNT} | tail +${COUNT} | awk '{print $1}')
+        TOP_FIVE_FOLDERS+="\n"
+        let COUNT++
+    done 
+}

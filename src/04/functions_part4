@@ -18,6 +18,8 @@ BLACK_BCKGRND='\033[40m'
 BCKGRND_COLOR_ARRAY=($NCOLOR $WHITE_BCKGRND $RED_BCKGRND $GREEN_BCKGRND $BLUE_BCKGRND $PURPLE_BCKGRND $BLACK_BCKGRND)
 
 ARRAY_COLORS_DEFAULT=(5 1 1 5)
+NAMES_OF_COLORS_ARRAY=('default' '(white)' '(red)' '(green)' ' (blue)'  '(purple)' '(black)')
+TO_PRINT=
 
 function detect_colors {
     case $1 in 
@@ -73,7 +75,6 @@ function check_integer {
     [[ $number =~ [[+-]?^0-9] ]] && echo -en ${RED_BCKGRND}"Value of arg #$COUNT is not integer, please try again"${NCOLOR} && ERROR=1 && echo  
     COUNT=$((COUNT+1))
     done
-    echo
     return $ERROR;
 }
 
@@ -99,14 +100,29 @@ function check_number_of_color {
 
 function read_line_from_file {
     COUNT=0
-    while IFS== read -r colomn_entity color_number; do
-        ARRAY_COLORS_FROM_FILE[$COUNT]=${ARRAY_COLORS_DEFAULT[$COUNT]}    
+    while IFS== read -r column_entity color_number; do
         if [[ $color_number ]] 
         then
-                ARRAY_COLORS_FROM_FILE[$COUNT]=${color_number}
-                let COUNT++
+            ARRAY_COLORS_FROM_FILE[$COUNT]=${color_number}
+            TO_PRINT+=${column_entity}
+            TO_PRINT+=" = "
+            TO_PRINT+=${color_number}" "
+            TO_PRINT+=${NAMES_OF_COLORS_ARRAY[$color_number]}
+            TO_PRINT+="\n"
+            let COUNT++
         else
-                let COUNT++
+            ARRAY_COLORS_FROM_FILE[$COUNT]=${ARRAY_COLORS_DEFAULT[$COUNT]}
+            TO_PRINT+=${column_entity}
+            TO_PRINT+=" = "
+            TO_PRINT+=${NAMES_OF_COLORS_ARRAY[0]}" "
+            TMP=${ARRAY_COLORS_DEFAULT[$COUNT]}
+            TO_PRINT+=${NAMES_OF_COLORS_ARRAY[$TMP]}
+            TO_PRINT+="\n"
+            let COUNT++
         fi
-    done < ./configuration.file
+    done < ./configuration
+}
+
+function print_color_case {
+    echo -en $TO_PRINT
 }

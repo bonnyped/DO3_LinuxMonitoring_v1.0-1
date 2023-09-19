@@ -2,7 +2,7 @@
 
 #раскраска Баш-скрипта исследование системы 
 
-. ./functions_part3.file
+. ./functions_part3
 
 OS=`uname -s`
 MEM_TOTAL_b="$(free -b | grep "Mem:" | printf %d $(awk '{print $2}'))"
