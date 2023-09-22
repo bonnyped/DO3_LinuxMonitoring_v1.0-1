@@ -13,7 +13,7 @@ b_Mb=1048576;
 C=1024;
 
 echo
-if check_arguments $# && check_integer $1 $2 $3 $4 && check_sequence $1 $2 $3 $4 && check_number_of_color $1 $2 $3 $4
+if check_integer $1 $2 $3 $4 && check_arguments $# && check_sequence $1 $2 $3 $4 && check_number_of_color $1 $2 $3 $4
 then
 detect_colors $1 $2 $3 $4
 echo -en "${COLOR_NAME}HOSTNAME:        ${COLOR_VALUE}$(hostname)${NCOLOR}"                                                                                         && d_echo

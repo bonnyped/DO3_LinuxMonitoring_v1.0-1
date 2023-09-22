@@ -1,17 +1,78 @@
 #!/bin/bash
 
-TOTAL_FOLDERS=$(find ${1} -mindepth 0 -type d | wc -l)
+. ./checks_part5
 
-function top_five_folders {
+start_time=$(date +%s.%N)
+pattern='\.[^0-9\\\/:*?"<>|\s.]{1,255}$'
+top_ten=10
+
+if check_existing_dir $1
+then
+total_folders=$(find ${1} -mindepth 0 -mount -type d 2>/dev/null| wc -l)
+total_files=$(find ${1} -type f 2>/dev/null | wc -l)
+total_conf=$(find ${1} -type f -name "*.conf" 2>/dev/null| wc -l)
+total_text=$(file $(find ${1} -type f 2>/dev/null) | awk '/ASCII text/ || /UTF-8 Unicode text/'| wc -l)
+total_exec=$(file $(find ${1} -type f 2>/dev/null) | grep executable | wc -l)
+total_log=$(find ${1} -type f -name "*.log" 2>/dev/null | wc -l)
+total_arch=$(file $(find ${1} -type f 2>/dev/null) | awk '/compressed/ || /archive/' | wc -l)
+total_symb=$(ls -lR ${1} 2>/dev/null | grep '^l' | wc -l)
+fi
+
+function top_five_dir {
     COUNT=1
-    [[ $TOTAL_FOLDERS -le 5 ]] && NUMBER_OF_DIR=${TOTAL_FOLDERS} || NUMBER_OF_DIR=5
-    while [ ${COUNT} -le ${NUMBER_OF_DIR} ]; do
-        TOP_FIVE_FOLDERS+="\t"${COUNT}
-        TOP_FIVE_FOLDERS+=" - "
-        TOP_FIVE_FOLDERS+=$(du -h ${1} | sort -rn | head -${COUNT} | tail +${COUNT} | awk '{print $2}')
-        TOP_FIVE_FOLDERS+=", "
-        TOP_FIVE_FOLDERS+=$(du -h ${1} | sort -rn | head -${COUNT} | tail +${COUNT} | awk '{print $1}')
-        TOP_FIVE_FOLDERS+="\n"
+    [[ $total_folders -le 5 ]] && number_of_dir=${total_folders} || number_of_dir=5
+    echo $total_folders
+    while [ ${COUNT} -le ${number_of_dir} ]; do
+        top_five_folders+="\t"${COUNT}
+        top_five_folders+=" - "
+        top_five_folders+=$(du -hx ${1} 2>/dev/null | sort -rh | head -${COUNT} | tail +${COUNT} | awk '{print $2}')
+        top_five_folders+=", "
+        top_five_folders+=$(du -hx ${1} 2>/dev/null | sort -rh | head -${COUNT} | tail +${COUNT} | awk '{print $1}')
+        top_five_folders+="\n"
         let COUNT++
     done 
+}
+
+function top_ten_f {
+    COUNT=1
+    [[ $total_files -le ${top_ten} ]] && number_of_f=${total_files} || number_of_f=${top_ten}
+    while [ ${COUNT} -le ${number_of_f} ]; do
+        top_ten_files+="\t"${COUNT}
+        top_ten_files+=" - "
+        current_file=$(find ${1} -type f -exec du -Sh {} + 2>/dev/null | sort -rh |  head -${COUNT} | tail +${COUNT} | awk '{print $2}')
+        top_ten_files+=${current_file}
+        top_ten_files+=", "
+        top_ten_files+=$(find ${1} -type f -exec du -Sh {} + 2>/dev/null | sort -rh |  head -${COUNT} | tail +${COUNT} | awk '{print $1}')
+        [[ ${current_file} =~ ${pattern} ]] && top_ten_files+=","$(echo ${BASH_REMATCH} | sed 'y/\./ /')
+        top_ten_files+="\n"
+        let COUNT++
+    done
+}
+
+function top_ten_exe {
+    if [[ ${total_exec} -gt 0 ]]
+    then
+    COUNT=1
+    [[ $total_exec -le ${top_ten} ]] && number_of_exe=${total_files} || number_of_exe=${top_ten}
+    list=$(find ${1} -type f 2>/dev/null) 
+    list=$(file ${list} | grep executable | awk '{print $1}' | sed 'y/:/ /') 
+    while [ ${COUNT} -le ${number_of_exe} ]; do
+        top_ten_exe_files+="\t"${COUNT}
+        top_ten_exe_files+=" - "
+        current_file=$(du ${list} -hx 2>/dev/null | sort -rh | head -${COUNT} | tail +${COUNT})
+        top_ten_exe_files+=$(echo ${current_file} | awk '{print $2}')", "
+        top_ten_exe_files+=" "
+        top_ten_exe_files+=$(echo ${current_file} | awk '{print $1}')
+        shsmm=$(sha1sum $(echo ${current_file} | awk '{print $2}'))
+        top_ten_exe_files+=", "$(echo ${shsmm} | awk '{print $1}')
+        top_ten_exe_files+="\n"
+        let COUNT++
+    done
+    fi
+}
+
+function count_exec_time {
+    end_time=$(date +%s.%N)
+    echo ${end_time}" "${start_time} | awk '{printf "%.1f", $1-$2}'
+    echo
 }

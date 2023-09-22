@@ -2,8 +2,23 @@
 
 . ../04/functions_part4
 
+# проверка существования директории
+function check_existing_dir {
+    detect_colors ${ARRAY_COLORS_DEFAULT[*]}
+    if [ ! -d $1 ]
+    then
+    ERROR=1
+    PATH_EXIST=1
+    echo -en "${COLOR_NAME}Path is not exist, please fingerprint another path\n${NCOLOR}"
+    else
+    ERROR=0
+    PATH_EXIST=0
+    fi 
+    return ${ERROR}
+}
+
 # функция проверки наличия аргумента-пути для анализа
-function check_path_existence {
+function check_path_existence_arg {
     if [[ -z $1 ]]
     then 
     echo -en "${COLOR_NAME}There is no path to analize, please try again and fingerprint path with sign \"/\" at the end of path!\n${NCOLOR}"

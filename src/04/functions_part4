@@ -17,7 +17,7 @@ PURPLE_BCKGRND='\033[45m'
 BLACK_BCKGRND='\033[40m'
 BCKGRND_COLOR_ARRAY=($NCOLOR $WHITE_BCKGRND $RED_BCKGRND $GREEN_BCKGRND $BLUE_BCKGRND $PURPLE_BCKGRND $BLACK_BCKGRND)
 
-ARRAY_COLORS_DEFAULT=(2 1 1 5)
+ARRAY_COLORS_DEFAULT=(2 1 1 2)
 NAMES_OF_COLORS_ARRAY=('default' '(white)' '(red)' '(green)' ' (blue)'  '(purple)' '(black)')
 TO_PRINT=
 
@@ -120,7 +120,7 @@ function read_line_from_file {
             TO_PRINT+="\n"
             let COUNT++
         fi
-    done < ./configuration
+    done < ./file.conf
 }
 
 function print_color_case {

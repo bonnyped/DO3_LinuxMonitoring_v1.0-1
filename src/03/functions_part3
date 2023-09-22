@@ -67,9 +67,14 @@ function check_arguments {
 function check_integer {
     ERROR=0
     COUNT=1
-     for number in $1 $2 $3 $4
+    for number in $1 $2 $3 $4
     do    
-    [[ $number =~ [[+-]?^0-9] ]] && echo -en ${RED_BCKGRND}"Value of arg #$COUNT is not integer, please try again"${NCOLOR} && ERROR=1 && echo  
+    if [[ ${number} =~ ^[0-9]*$ ]]
+    then
+    ERROR=0
+    else
+    echo -en ${RED_BCKGRND}"Value of arg #$COUNT is not integer, please try again"${NCOLOR} && ERROR=1 && echo 
+    fi
     COUNT=$((COUNT+1))
     done
     echo
